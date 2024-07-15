@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Canada Info Page</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+      <div class="container">
+         <div class="current-weather-container" id="current-weather-container">
+            <h2>Current Weather</h2>
+            <p id="current-weather"></p>
+         </div>
+         <div class="holidays-container">
+            <h2>Upcoming Canadian Holidays</h2>
+            <ul id="holidays-list"></ul>
+         </div>
+         <div class="news-container ticker-container" id="news-ticker-container">
+            <h1>Loading Canadian Breaking News...</h1>
+         </div>
+         <div class="clock-container">
+            <div class="Clock" id="Clock"></div>
+         </div>
+         <div id="date-container">
+            <h1 id="date"></h1>
+        </div>
+    
+        <script>
+            function formatDate(date) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString(undefined, options);
+            }
+    
+            const today = new Date();
+            document.getElementById('date').textContent = formatDate(today);
+        </script>
+         <div class="card">
+            <div class="search">
+                <input type="text" placeholder="enter city name" spellcheck="false">
+                <button><img src="images/search.png" alt="search icon" width="16" height="16"></button>
+            </div>
+            <div class="weather">
+                <img src="images/clear.png" class="weather-icon" alt="weather icon">  
+                <h1 class="temp">23°c</h1>
+                <h2 class="city">Toronto</h2>
+                <div class="details">
+                    <div class="col">
+                        <img src="images/humidity.png" alt="humidity icon" width="16" height="16">
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                    <div class="col">
+                        <img src="images/wind.png" alt="wind icon" width="16" height="16">
+                        <p class="wind">15 km/h</p>
+                        <p>Wind speed</p>
+                    </div>
+                </div>
+                <div class="forecast" id="forecast"></div>
+            </div>
+        </div>
+        
+        <script>
+            const apiKey = "97aa062504881d77be0dec64af78efae";
+            const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+            const forecastApiUrl = "https://api.openweathermap.org/data/2.5/forecast?&units=metric&q=";
+            const weatherByCoordsUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric";
+            const forecastByCoordsUrl = "https://api.openweathermap.org/data/2.5/forecast?&units=metric";
+            
+            const searchBox = document.querySelector(".search input");
+            const searchBtn = document.querySelector(".search button");
+    
+            async function checkWeather(city) {
+                const response = await fetch(weatherApiUrl + city + `&appid=${apiKey}`);
+                const data = await response.json();
+                
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+    
+                await getForecast(city);
+            }
+    
+            async function getForecast(city) {
+                const response = await fetch(forecastApiUrl + city + `&appid=${apiKey}`);
+                const data = await response.json();
+                const forecastElement = document.getElementById('forecast');
+                forecastElement.innerHTML = "";
+    
+                const forecastData = data.list.filter((item) => item.dt_txt.includes("12:00:00")).slice(0, 3);
+                
+                forecastData.forEach((day) => {
+                    const date = new Date(day.dt_txt);
+                    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                    const dayName = date.toLocaleDateString(undefined, options);
+    
+                    forecastElement.innerHTML += `
+                        <div class="day">
+                            <p>${dayName}</p>
+                            <p>${Math.round(day.main.temp)}°c</p>
+                            <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="weather icon" width="24" height="24">
+                        </div>
+                    `;
+                });
+            }
+    
+            async function getWeatherByLocation(lat, lon) {
+                const response = await fetch(weatherByCoordsUrl + `&lat=${lat}&lon=${lon}&appid=${apiKey}`);
+                const data = await response.json();
+                
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+    
+                await getForecastByLocation(lat, lon);
+            }
+    
+            async function getForecastByLocation(lat, lon) {
+                const response = await fetch(forecastByCoordsUrl + `&lat=${lat}&lon=${lon}&appid=${apiKey}`);
+                const data = await response.json();
+                const forecastElement = document.getElementById('forecast');
+                forecastElement.innerHTML = "";
+    
+                const forecastData = data.list.filter((item) => item.dt_txt.includes("12:00:00")).slice(0, 3);
+                
+                forecastData.forEach((day) => {
+                    const date = new Date(day.dt_txt);
+                    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                    const dayName = date.toLocaleDateString(undefined, options);
+    
+                    forecastElement.innerHTML += `
+                        <div class="day">
+                            <p>${dayName}</p>
+                            <p>${Math.round(day.main.temp)}°c</p>
+                            <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="weather icon" width="24" height="24">
+                        </div>
+                    `;
+                });
+            }
+    
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        getWeatherByLocation(lat, lon);
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            }
+    
+            searchBtn.addEventListener("click", () => {
+                checkWeather(searchBox.value);
+            });
+    
+            window.onload = getLocation;
+        </script>
+<div class="todo-container">
+    <h2>To-Do List</h2>
+    <div class="todo-input">
+        <input type="text" id="new-task" placeholder="Add a new task">
+        <button id="add-task-btn">Add</button>
+    </div>
+    <ul id="todo-list"></ul>
+</div>
+
+<script>
+    document.getElementById('add-task-btn').addEventListener('click', function() {
+        const taskText = document.getElementById('new-task').value;
+        if (taskText) {
+            const li = document.createElement('li');
+            const deleteBtn = document.createElement('button');
+            const completeBtn = document.createElement('input');
+            const taskSpan = document.createElement('span');
+
+            taskSpan.textContent = taskText;
+            
+            completeBtn.type = 'radio';
+            completeBtn.className = 'complete-btn';
+            completeBtn.addEventListener('click', function() {
+                li.classList.toggle('completed');
+            });
+
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.addEventListener('click', function() {
+                li.remove();
+            });
+
+            li.appendChild(completeBtn);
+            li.appendChild(taskSpan);
+            li.appendChild(deleteBtn);
+            document.getElementById('todo-list').appendChild(li);
+            document.getElementById('new-task').value = '';
+        }
+    });
+</script>
+
+
+<div class="stock-widget">
+    <div class="stock" id="AAPL">
+        <div class="stock-info">
+            <div class="stock-symbol">AAPL</div>
+            <div class="stock-name">Apple Inc</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">-2.52%</div>
+        </div>
+    </div>
+    <div class="stock" id="TSLA">
+        <div class="stock-info">
+            <div class="stock-symbol">TSLA</div>
+            <div class="stock-name">Tesla Inc</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">-6.25%</div>
+        </div>
+    </div>
+    <div class="stock" id="GOOGL">
+        <div class="stock-info">
+            <div class="stock-symbol">GOOGL</div>
+            <div class="stock-name">Alphabet Inc</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">-2.75%</div>
+        </div>
+    </div>
+    <div class="stock" id="TD">
+        <div class="stock-info">
+            <div class="stock-symbol">TD</div>
+            <div class="stock-name">Toronto-Dominion Bank</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">+0.51%</div>
+        </div>
+    </div>
+    <div class="stock" id="AMZN">
+        <div class="stock-info">
+            <div class="stock-symbol">AMZN</div>
+            <div class="stock-name">Amazon.com Inc</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">-2.74%</div>
+        </div>
+    </div>
+    <div class="stock" id="MSFT">
+        <div class="stock-info">
+            <div class="stock-symbol">MSFT</div>
+            <div class="stock-name">Microsoft Corp</div>
+        </div>
+        <div class="stock-change">
+            <div class="change">-2.71%</div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const apiKey = '7KGX8SS8T5B4C2A8';
+        const stocks = ['AAPL', 'TSLA', 'GOOGL', 'TD', 'AMZN', 'MSFT'];
+
+        const fetchStockData = () => {
+            stocks.forEach(stock => {
+                fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stock}&interval=1min&apikey=${apiKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const timeSeries = data['Time Series (1min)'];
+                        const lastRefreshed = data['Meta Data']['3. Last Refreshed'];
+                        const lastPrice = parseFloat(timeSeries[lastRefreshed]['4. close']);
+                        const previousPrice = parseFloat(Object.values(timeSeries)[1]['4. close']);
+                        const change = ((lastPrice - previousPrice) / previousPrice * 100).toFixed(2);
+                        const changeElement = document.querySelector(`#${stock} .change`);
+                        changeElement.textContent = change > 0 ? `+${change}%` : `${change}%`;
+                        changeElement.classList.toggle('up', change > 0);
+                        changeElement.classList.toggle('down', change <= 0);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            });
+        };
+
+        fetchStockData(); // Initial fetch
+        setInterval(fetchStockData, 60000); // Update every minute
+    });
+</script>
+   
+      <script src="script.js"></script>
+   </body>
+</html>
+</html>
