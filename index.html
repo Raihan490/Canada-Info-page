@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
+<script id="interaxai-widget-config">
+window.INTERAX_AI = {
+  id: "66a5323b510f2e99177c70aa",
+  theme: "light",
+};
+const _interaxAI=async()=>{const t=await fetch(`https://interaxai.com
+/api/embed/version?widgetId=${INTERAX_AI.id}`).then((t=>t.text())),
+e=document.createElement("script");e.id="interaxai-widget-script",
+e.src=`https://cdn.jsdelivr.net/gh/interaxai/cdn@${t}/dist/bundle.js`,
+document.head.appendChild(e)};_interaxAI();
+</script>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Canada Info Page</title>
@@ -286,6 +297,7 @@
         setInterval(fetchStockData, 60000); // Update every minute
     });
 </script>
+         <div id="interaxai-widget"></div>
    
       <script src="script.js"></script>
        <script src="//code.tidio.co/gfgr41ncaapyfhr86s9bqsje187si9wd.js" async></script>
