@@ -2,13 +2,14 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-background-color: black;
+    background-color:"black";
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     height: 100vh;
     position: relative;
+    overflow-y: hidden;
 }
 
 .container {
@@ -112,7 +113,7 @@ top: 165px;
 .card{
     width: 350px;
     max-width: 470px;
-    height: 225px;
+    height: 300px;
     background: linear-gradient(135deg, #00feba, #5b548a);
     color: #fff;
     margin: 100px auto 0;
@@ -169,7 +170,7 @@ top: 165px;
 }
  
 .weather h1{
-    font-size: 50px;
+    font-size: 60px;
     font-weight: 500;
     position: relative;
     bottom: 50px;
@@ -189,7 +190,7 @@ top: 165px;
    justify-content: space-between;
    padding: 0 20px;
    position: relative;
-   bottom: 80px;
+   bottom: 20px;
 
    
 }
@@ -210,7 +211,7 @@ top: 165px;
     justify-content: space-between;                           
     margin-top: 10px;
     position: relative;
-    top: -85px;
+    top: -25px;
     height: 155px;
     background: #444;
     border-radius: 5px;
@@ -231,9 +232,9 @@ top: 165px;
     height: 40px;
 }
 .todo-container {
-    background-color: white;
+    background-color: rgb(64, 7, 64);
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 5px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     position: relative;
@@ -354,79 +355,4 @@ top: 165px;
 }
 .down {
     color: red;
-}
-.deals-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    text-align: center;
-    max-width: 800px;
-    width: 100%;
-}
-
-#deals-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-#deals-list li {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-}
-
-#deals-list li img {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 15px;
-    object-fit: cover;
-}
-
-#deals-list li a {
-    text-decoration: none;
-    color: #007bff;
-    flex-grow: 1;
-    margin-right: 15px;
-}
-
-#deals-list li .price {
-    font-weight: bold;
-    color: #333;
-}
-.pomodoro-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-#timer {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-.controls button, #addTask {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.task-list {
-    margin-top: 20px;
-}
-
-#tasks {
-    list-style: none;
-    padding: 0;
-}
-
-#tasks li {
-    padding: 5px 0;
-    border-bottom: 1px solid #ddd;
 }
