@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const headline = headlines[currentIndex];
             const tickerItem = document.createElement('div');
             tickerItem.className = 'ticker-item active';
-            tickerItem.innerHTML = `<a href="${headline.link}" target="_blank">${headline.title}: ${headline.description}</a>`;
+            tickerItem.innerHTML = `<a class="ticker-link" href="${headline.link}" target="_blank">${headline.title}: ${headline.description}</a>`;
             container.appendChild(tickerItem);
 
             setTimeout(() => {
@@ -112,7 +112,5 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(updateClock, 1000);
     updateClock();
 
-
-   
 
 });
